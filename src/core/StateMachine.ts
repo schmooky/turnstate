@@ -1,5 +1,11 @@
 import type {
-  IStateMachine, Command, CommandResult, ValidationResult, StateChangeListener, StateSnapshot, SerializedCommand
+  IStateMachine,
+  Command,
+  CommandResult,
+  ValidationResult,
+  StateChangeListener,
+  StateSnapshot,
+  SerializedCommand,
 } from "../types/api";
 import type { StateMachineOptions } from "../types/internals";
 import { defaultOptions } from "./Config";
@@ -25,14 +31,20 @@ export class StateMachine<TState> implements IStateMachine<TState> {
     this.history = new HistoryManager<TState>(this.opts.maxHistorySize!);
   }
 
-  getState(): TState { return this.state; }
+  getState(): TState {
+    return this.state;
+  }
 
   executeCommand(command: Command<TState>): CommandResult<TState> {
     const v = this.validateAll(command, this.state);
     if (!v.valid) return { success: false, error: v.errors.join("; ") };
     const input = this.opts.devMode ? deepFreeze(this.state) : this.state;
     const result = command.execute(input);
-    if (!result.success || result.state === undefined) return { success: false, error: result.error ?? "Command failed without state" };
+    if (!result.success || result.state === undefined)
+      return {
+        success: false,
+        error: result.error ?? "Command failed without state",
+      };
     const previous = this.state;
     const next = this.opts.stateCloner!(result.state);
     this.state = next;
@@ -40,7 +52,9 @@ export class StateMachine<TState> implements IStateMachine<TState> {
     const evt1: any = { previous, next, command };
     if (result.sideEffects) evt1.sideEffects = result.sideEffects;
     this.events.emit(evt1);
-    return result.sideEffects ? { success: true, state: next, sideEffects: result.sideEffects } : { success: true, state: next };
+    return result.sideEffects
+      ? { success: true, state: next, sideEffects: result.sideEffects }
+      : { success: true, state: next };
   }
 
   undo(): CommandResult<TState> {
@@ -54,7 +68,9 @@ export class StateMachine<TState> implements IStateMachine<TState> {
     const evt2: any = { previous: prev, next, command: entry.command };
     if (sideEffects) evt2.sideEffects = sideEffects;
     this.events.emit(evt2);
-    return sideEffects ? { success: true, state: next, sideEffects } : { success: true, state: next };
+    return sideEffects
+      ? { success: true, state: next, sideEffects }
+      : { success: true, state: next };
   }
 
   redo(): CommandResult<TState> {
@@ -62,7 +78,11 @@ export class StateMachine<TState> implements IStateMachine<TState> {
     if (!cmd) return { success: false, error: "Nothing to redo" };
     const prev = this.state;
     const result = cmd.execute(prev);
-    if (!result.success || result.state === undefined) return { success: false, error: "Redo failed due to non-deterministic command" };
+    if (!result.success || result.state === undefined)
+      return {
+        success: false,
+        error: "Redo failed due to non-deterministic command",
+      };
     const next = this.opts.stateCloner!(result.state);
     this.state = next;
     // push redo as executed with captured prev
@@ -70,18 +90,24 @@ export class StateMachine<TState> implements IStateMachine<TState> {
     const evt3: any = { previous: prev, next, command: cmd };
     if (result.sideEffects) evt3.sideEffects = result.sideEffects;
     this.events.emit(evt3);
-    return result.sideEffects ? { success: true, state: next, sideEffects: result.sideEffects } : { success: true, state: next };
+    return result.sideEffects
+      ? { success: true, state: next, sideEffects: result.sideEffects }
+      : { success: true, state: next };
   }
 
-  subscribe(listener: StateChangeListener<TState>): () => void { return this.events.subscribe(listener); }
+  subscribe(listener: StateChangeListener<TState>): () => void {
+    return this.events.subscribe(listener);
+  }
 
   getStateSnapshot(): StateSnapshot<TState> {
     return {
       version,
       timestamp: new Date().toISOString(),
       state: this.serializer.serialize(this.state),
-      history: this.history.serialize((h) => h.command.serialize() as SerializedCommand),
-      serializer: { name: (this.serializer as any).name ?? "custom" }
+      history: this.history.serialize(
+        (h) => h.command.serialize() as SerializedCommand,
+      ),
+      serializer: { name: (this.serializer as any).name ?? "custom" },
     };
   }
 
@@ -100,7 +126,9 @@ export class StateMachine<TState> implements IStateMachine<TState> {
       const cmd = doneCmds[i]!;
       const res = cmd.undo(cursor);
       if (!res.success || res.state === undefined) {
-        throw new Error(`Failed to rehydrate history: undo failed for command ${cmd.type}`);
+        throw new Error(
+          `Failed to rehydrate history: undo failed for command ${cmd.type}`,
+        );
       }
       prevStates[i] = this.opts.stateCloner!(res.state!);
       cursor = res.state as TState;
@@ -111,9 +139,14 @@ export class StateMachine<TState> implements IStateMachine<TState> {
     this.history.loadFromSerialized(doneCmds, undoneCmds, prevStates);
   }
 
-  clearHistory(): void { this.history.clear(); }
+  clearHistory(): void {
+    this.history.clear();
+  }
 
-  private validateAll(command: Command<TState>, state: TState): ValidationResult {
+  private validateAll(
+    command: Command<TState>,
+    state: TState,
+  ): ValidationResult {
     const errors: string[] = [];
     for (const v of this.validators ?? []) {
       const r = v.validate(command, state);

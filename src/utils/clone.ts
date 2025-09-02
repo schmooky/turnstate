@@ -1,11 +1,15 @@
-export function deepClone<T>(input: T, visited = new WeakMap<object, any>()): T {
+export function deepClone<T>(
+  input: T,
+  visited = new WeakMap<object, any>(),
+): T {
   if (input === null || typeof input !== "object") return input;
   if (visited.has(input as any)) return visited.get(input as any);
   if (input instanceof Date) return new Date(input) as any;
   if (input instanceof Map) {
     const m = new Map();
     visited.set(input as any, m);
-    for (const [k, v] of input) m.set(deepClone(k, visited), deepClone(v, visited));
+    for (const [k, v] of input)
+      m.set(deepClone(k, visited), deepClone(v, visited));
     return m as any;
   }
   if (input instanceof Set) {

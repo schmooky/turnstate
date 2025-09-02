@@ -1,7 +1,16 @@
-import type { Command, StateSerializer, Validator, CommandFactory } from "./api";
+import type {
+  Command,
+  StateSerializer,
+  Validator,
+  CommandFactory,
+} from "./api";
 
-export interface TimeProvider { now(): Date; }
-export interface RandomProvider { next(): number; }
+export interface TimeProvider {
+  now(): Date;
+}
+export interface RandomProvider {
+  next(): number;
+}
 
 export interface StateMachineOptions<TState> {
   validators?: Validator<TState>[];

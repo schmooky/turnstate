@@ -7,14 +7,39 @@ interface MyGameState {
 }
 
 class AddPlayer extends BaseCommand<MyGameState> {
-  constructor(playerId: string, private name: string) { super({ playerId, type: "AddPlayer" }); }
+  constructor(
+    playerId: string,
+    private name: string,
+  ) {
+    super({ playerId, type: "AddPlayer" });
+  }
   validate(s: MyGameState) {
     const exists = s.players.includes(this.name);
-    return exists ? { valid: false, errors: ["Player already exists"] } : { valid: true, errors: [] };
+    return exists
+      ? { valid: false, errors: ["Player already exists"] }
+      : { valid: true, errors: [] };
   }
-  execute(s: MyGameState) { return { success: true, state: { ...s, players: [...s.players, this.name] } }; }
-  undo(s: MyGameState) { return { success: true, state: { ...s, players: s.players.filter((p) => p !== this.name) } }; }
-  serialize() { return { id: this.id, playerId: this.playerId, type: this.type, timestamp: this.timestamp.toISOString(), payload: { name: this.name } }; }
+  execute(s: MyGameState) {
+    return {
+      success: true,
+      state: { ...s, players: [...s.players, this.name] },
+    };
+  }
+  undo(s: MyGameState) {
+    return {
+      success: true,
+      state: { ...s, players: s.players.filter((p) => p !== this.name) },
+    };
+  }
+  serialize() {
+    return {
+      id: this.id,
+      playerId: this.playerId,
+      type: this.type,
+      timestamp: this.timestamp.toISOString(),
+      payload: { name: this.name },
+    };
+  }
 }
 
 const initial: MyGameState = { players: [], board: {}, customData: {} };

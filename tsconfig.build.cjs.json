@@ -4,7 +4,7 @@
     "outDir": "dist/cjs",
     "declaration": false,
     "emitDeclarationOnly": false,
-    "module": "es2020"
+    "module": "ES2020"
   },
   "include": ["src/**/*"]
 }

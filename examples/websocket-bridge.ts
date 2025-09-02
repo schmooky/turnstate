@@ -9,13 +9,38 @@ import { StateMachine, BaseCommand } from "../src";
 // @ts-ignore
 import { WebSocket } from "ws";
 
-interface GS { value: number; }
+interface GS {
+  value: number;
+}
 class SetValue extends BaseCommand<GS> {
-  constructor(playerId: string, private v: number) { super({ playerId, type: "SetValue" }); }
-  execute(_s: GS) { return { success: true, state: { value: this.v }, sideEffects: [{ type: "notify", data: { v: this.v } }] }; }
-  undo(_s: GS) { return { success: true, state: { value: 0 } }; }
-  validate(_s: GS) { return { valid: true, errors: [] }; }
-  serialize() { return { id: this.id, playerId: this.playerId, type: this.type, timestamp: this.timestamp.toISOString(), payload: { v: this.v } }; }
+  constructor(
+    playerId: string,
+    private v: number,
+  ) {
+    super({ playerId, type: "SetValue" });
+  }
+  execute(_s: GS) {
+    return {
+      success: true,
+      state: { value: this.v },
+      sideEffects: [{ type: "notify", data: { v: this.v } }],
+    };
+  }
+  undo(_s: GS) {
+    return { success: true, state: { value: 0 } };
+  }
+  validate(_s: GS) {
+    return { valid: true, errors: [] };
+  }
+  serialize() {
+    return {
+      id: this.id,
+      playerId: this.playerId,
+      type: this.type,
+      timestamp: this.timestamp.toISOString(),
+      payload: { v: this.v },
+    };
+  }
 }
 
 const sm = new StateMachine<GS>({ value: 0 });

@@ -22,7 +22,10 @@ export interface Command<TState> {
 
 export interface CommandFactory<TState> {
   /** Register a builder for a given command type */
-  register(type: string, builder: (data: SerializedCommand) => Command<TState>): void;
+  register(
+    type: string,
+    builder: (data: SerializedCommand) => Command<TState>,
+  ): void;
   /** Create a concrete Command from its serialized form */
   create(data: SerializedCommand): Command<TState>;
 }
@@ -71,14 +74,16 @@ export interface StateChangeEvent<TState> {
   sideEffects?: SideEffect[];
 }
 
-export type StateChangeListener<TState> = (event: StateChangeEvent<TState>) => void;
+export type StateChangeListener<TState> = (
+  event: StateChangeEvent<TState>,
+) => void;
 
 export interface StateSnapshot<TState> {
   version: string;
   timestamp: string;
   state: string; // serialized via configured serializer
   history: {
-    done: SerializedCommand[];   // executed commands in order
+    done: SerializedCommand[]; // executed commands in order
     undone: SerializedCommand[]; // commands currently in redo stack
     limit: number;
   };
