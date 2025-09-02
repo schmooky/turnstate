@@ -1,21 +1,46 @@
 {
   "name": "turnstate",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "TypeScript state machine for multiplayer, server-authoritative, turn-based games \u2014 deterministic, testable, pluggable.",
+  "license": "MIT",
+  "author": "Dmitry Vasiliev",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.cjs",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "main": "dist/cjs/index.cjs",
+  "module": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md",
+    "examples"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rimraf dist coverage .turbo || true",
+    "build:esm": "tsc -p tsconfig.build.esm.json",
+    "build:cjs": "tsc -p tsconfig.build.cjs.json",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs && tsc -p tsconfig.json --emitDeclarationOnly --outDir dist/types",
+    "test": "vitest --run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "examples:basic": "tsx examples/basic.ts",
+    "examples:advanced": "tsx examples/advanced.ts",
+    "examples:websocket": "tsx examples/websocket-bridge.ts",
+    "prepare": "npm run build"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/schmooky/turnstate.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/schmooky/turnstate/issues"
-  },
-  "homepage": "https://github.com/schmooky/turnstate#readme"
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5",
+    "tsx": "^4.19.0",
+    "rimraf": "^6.0.1",
+    "ws": "^8.18.0"
+  }
 }

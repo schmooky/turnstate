@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist/cjs",
+    "declaration": false,
+    "emitDeclarationOnly": false,
+    "module": "es2020"
+  },
+  "include": ["src/**/*"]
+}
