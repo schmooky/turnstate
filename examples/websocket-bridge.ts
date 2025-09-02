@@ -1,5 +1,5 @@
 // Minimal WebSocket bridge example.
-// Run a local server separately: `node examples/ws-server.js` (see below).
+// Run a local server separately: `node examples/ws-server.cjs` (see below).
 // Then run this example: `npm run examples:websocket`
 
 import { StateMachine, BaseCommand } from "../src";

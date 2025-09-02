@@ -45,7 +45,7 @@ sm2.loadSnapshot(snapshot); // uses command.undo() to reconstruct prevStates for
 
 ## Simple WebSocket Bridge (example)
 
-- Start server: `node examples/ws-server.js`
+- Start server: `node examples/ws-server.cjs`
 - Run client example: `npm run examples:websocket`
 
 Events are sent as JSON: `{ kind: "stateChange", evt }`.
