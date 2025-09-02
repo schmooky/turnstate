@@ -17,13 +17,13 @@ Deterministic, pluggable, server-authoritative state machine for turn-based mult
 ## Install
 
 ```bash
-npm i game-state-machine
+npm i turnstate
 ```
 
 ## Custom Command Factory
 
 ```ts
-import { DefaultCommandFactory } from "game-state-machine";
+import { DefaultCommandFactory } from "turnstate";
 
 const factory = new DefaultCommandFactory<MyState>();
 factory.register(

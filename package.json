@@ -1,6 +1,6 @@
 {
   "name": "turnstate",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TypeScript state machine for multiplayer, server-authoritative, turn-based games — deterministic, testable, pluggable.",
   "license": "MIT",
   "author": "Dmitry Vasiliev",
